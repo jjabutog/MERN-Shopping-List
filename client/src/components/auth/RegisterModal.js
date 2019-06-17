@@ -12,6 +12,7 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { register } from "../../actions/authActions";
 
 class RegisterModal extends Component {
   state = {
@@ -30,7 +31,8 @@ class RegisterModal extends Component {
 
   static propTypes = {
     isAuthenticated: PropTypes.bool,
-    error: PropTypes.object.isRequired
+    error: PropTypes.object.isRequired,
+    register: PropTypes.func.isRequired
   };
 
   onChange = e => {
@@ -40,8 +42,20 @@ class RegisterModal extends Component {
   onSubmit = e => {
     e.preventDefault();
 
+    const { name, email, password } = this.state;
+
+    //Create user object
+    const newUser = {
+      name,
+      email,
+      password
+    };
+
+    //Attempt to register
+    this.props.register(newUser);
+
     //Close the modal
-    this.toggle();
+    //this.toggle();
   };
 
   render() {
@@ -61,6 +75,7 @@ class RegisterModal extends Component {
                   name="name"
                   id="name"
                   placeholder="Name"
+                  className="mb-3"
                   onChange={this.onChange}
                 />
 
@@ -70,6 +85,7 @@ class RegisterModal extends Component {
                   name="email"
                   id="email"
                   placeholder="Email"
+                  className="mb-3"
                   onChange={this.onChange}
                 />
 
@@ -79,6 +95,7 @@ class RegisterModal extends Component {
                   name="password"
                   id="password"
                   placeholder="Password"
+                  className="mb-3"
                   onChange={this.onChange}
                 />
                 <Button color="dark" style={{ marginTop: "2rem" }} block>
@@ -100,5 +117,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  {}
+  { register }
 )(RegisterModal);
